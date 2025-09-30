@@ -1,0 +1,13 @@
+{
+	"nodes":[
+		{"id":"c22bb721f172f0ac","x":-160,"y":260,"width":250,"height":60,"type":"text","text":"парсер"},
+		{"id":"74e075e8ae4a90f9","x":220,"y":260,"width":250,"height":60,"type":"text","text":"БД для хранения 1 лога"},
+		{"id":"efaf751982208c40","x":-500,"y":260,"width":250,"height":60,"type":"text","text":"gRPC шина"},
+		{"id":"02750ccc8f0be57c","x":-160,"y":100,"width":250,"height":60,"type":"text","text":"UI (frontend)"}
+	],
+	"edges":[
+		{"id":"a556cefadbd9e12f","fromNode":"c22bb721f172f0ac","fromSide":"right","toNode":"74e075e8ae4a90f9","toSide":"left","fromEnd":"arrow","label":"api"},
+		{"id":"5b98885b88587338","fromNode":"c22bb721f172f0ac","fromSide":"top","toNode":"02750ccc8f0be57c","toSide":"bottom","label":"api"},
+		{"id":"f54eccafa86fa8c0","fromNode":"c22bb721f172f0ac","fromSide":"left","toNode":"efaf751982208c40","toSide":"right","label":"api"}
+	]
+}
