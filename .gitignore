@@ -1,0 +1,6 @@
+test_log.json
+testDB.db
+*.json
+*db
+.git
+__pycache__

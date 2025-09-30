@@ -9,30 +9,37 @@ class LogDatabase:
     def __init__(self,db_name: str = DB_FILENAME):
         self.conn = sqlite3.connect(db_name)
         self.cursor = self.conn.cursor()
-        self.create_table()
+        self._create_table_()
 
-    def create_table(self)->None:
+    def _create_table_(self)->None:
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS logs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                last_task_id INTEGER,
+                id TEXT,
                 level TEXT,
                 message TEXT,
-                timestamp DATETIME,
+                timestamp TEXT,
                 module TEXT,
                 caller TEXT,
-                extra_json TEXT
+                tf_proto_version TEXT,
+                tf_provider_addr TEXT,
+                tf_rpc TEXT,
+                tf_resource_type TEXT,
+                tf_attribute_path TEXT,
+                tf_client_capability_write_only_attributes_allowed BOOLEAN,
+                tf_client_capability_deferral_allowed BOOLEAN,
+                tf_req_duration_ms INTEGER,
+                diagnostic_error_count INTEGER,
+                diagnostic_warning_count INTEGER
                             )
         ''')
         self.conn.commit()
 
     def insert_log(self, logs_data: List[Dict[str, Any]])->None:
-        data=[(logs_data.get('id')),(logs_data.get('last_task_id')),(logs_data.get('level')),(logs_data.get('message')),(logs_data.get('timestamp')),(logs_data.get('module')),(logs_data.get('module')),(logs_data.get('caller')),(logs_data.get('extra_json')) for log in logs_data]
+        data=[[(log.get('id')),(log.get('level')),(log.get('message')),(log.get('timestamp')),(log.get('module')),(log.get('caller')),(log.get('tf_proto_version')),(log.get('tf_provider_addr')),(log.get('tf_rpc')),(log.get('tf_resource_type')),(log.get('tf_attribute_path')),(log.get('tf_client_capability_write_only_attributes_allowed')),(log.get('tf_client_capability_deferral_allowed')),(log.get('tf_req_duration_ms')),(log.get('diagnostic_error_count')),(log.get('diagnostic_warning_count'))] for log in logs_data]
         self.cursor.executemany('''
-            INSERT INTO logs (id, last_task_id, level, message, timestamp, module, caller, extra_json)
-            VALUES (?,?,?,?,?,?,?,?)
-        ''', (
-        ))
+            INSERT INTO logs (id, level, message, timestamp, module, caller, tf_proto_version, tf_provider_addr, tf_rpc, tf_resource_type, tf_attribute_path, tf_client_capability_write_only_attributes_allowed, tf_client_capability_deferral_allowed, tf_req_duration_ms, diagnostic_error_count, diagnostic_warning_count)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        ''', data )
         self.conn.commit()
     
     def get_all_logs(self)->List[Dict:[str,Any]]:
