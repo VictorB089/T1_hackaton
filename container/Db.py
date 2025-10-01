@@ -32,16 +32,17 @@ class LogDatabase:
                 tf_client_capability_deferral_allowed BOOLEAN,
                 tf_req_duration_ms INTEGER,
                 diagnostic_error_count INTEGER,
-                diagnostic_warning_count INTEGER
+                diagnostic_warning_count INTEGER,
+                incomplete TEXT
                             )
         ''')
         self.conn.commit()
 
     def insert_log(self, logs_data: List[Dict[str, Any]])->None:
-        data=[[(log.get('id')),(log.get('level')),(log.get('message')),(log.get('timestamp')),(log.get('module')),(log.get('caller')),(log.get('tf_proto_version')),(log.get('tf_provider_addr')),(log.get('tf_rpc')),(log.get('tf_resource_type')),(log.get('tf_attribute_path')),(log.get('tf_client_capability_write_only_attributes_allowed')),(log.get('tf_client_capability_deferral_allowed')),(log.get('tf_req_duration_ms')),(log.get('diagnostic_error_count')),(log.get('diagnostic_warning_count'))] for log in logs_data]
+        data=[[(log.get('id')),(log.get('level')),(log.get('message')),(log.get('timestamp')),(log.get('module')),(log.get('caller')),(log.get('tf_proto_version')),(log.get('tf_provider_addr')),(log.get('tf_rpc')),(log.get('tf_resource_type')),(log.get('tf_attribute_path')),(log.get('tf_client_capability_write_only_attributes_allowed')),(log.get('tf_client_capability_deferral_allowed')),(log.get('tf_req_duration_ms')),(log.get('diagnostic_error_count')),(log.get('diagnostic_warning_count')),(log.get('incomplete'))] for log in logs_data]
         self.cursor.executemany('''
-            INSERT INTO logs (id, level, message, timestamp, module, caller, tf_proto_version, tf_provider_addr, tf_rpc, tf_resource_type, tf_attribute_path, tf_client_capability_write_only_attributes_allowed, tf_client_capability_deferral_allowed, tf_req_duration_ms, diagnostic_error_count, diagnostic_warning_count)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            INSERT INTO logs (id, level, message, timestamp, module, caller, tf_proto_version, tf_provider_addr, tf_rpc, tf_resource_type, tf_attribute_path, tf_client_capability_write_only_attributes_allowed, tf_client_capability_deferral_allowed, tf_req_duration_ms, diagnostic_error_count, diagnostic_warning_count, incomplete)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         ''', data )
         self.conn.commit()
 
@@ -82,8 +83,10 @@ def import_logs(log_path:str = LOG_PATH)->List[Dict[str, Any]]:
                         "tf_client_capability_deferral_allowed":log_entry.get("tf_client_capability_deferral_allowed"),
                         "tf_req_duration_ms":log_entry.get("tf_req_duration_ms"),
                         "diagnostic_error_count":log_entry.get("diagnostic_error_count"),
-                        "diagnostic_warning_count":log_entry.get("diagnostic_warning_count") })
+                        "diagnostic_warning_count":log_entry.get("diagnostic_warning_count"),
+                        "incomplete":log_entry.get("incomplete")})
                 except json.JSONDecodeError:
+                    logs_hold.append({"incomplete":str(line)})
                     print(f"ошибка чтения JSON на строке:{line_number},строка:\n {line}")
                     failed_lines.append(line_number)
                 print(f"Импортировано {len(logs_hold)} строк логов")

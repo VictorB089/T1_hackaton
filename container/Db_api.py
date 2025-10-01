@@ -9,6 +9,7 @@ app = FastAPI()
 
 @app.get("/logs/filter")
 def get_filtered_logs(
+    offset:int | None = Query(0),
     limit:int = 100,
     id:str | None = Query(None),
     level:str | None = Query(None),
@@ -25,13 +26,15 @@ def get_filtered_logs(
     tf_client_capability_deferral_allowed:bool | None = Query(None),
     tf_req_duration_ms:int | None = Query(None),
     diagnostic_error_count:int | None = Query(None),
-    diagnostic_warning_count:int | None = Query(None)
+    diagnostic_warning_count:int | None = Query(None),
+    incomplete:str | None = Query(None)
     ):
+
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    sql = "SELECT id, level, message, timestamp, module, caller, tf_proto_version, tf_provider_addr, tf_rpc, tf_resource_type, tf_attribute_path, tf_client_capability_write_only_attributes_allowed, tf_client_capability_deferral_allowed, tf_req_duration_ms, diagnostic_error_count, diagnostic_warning_count FROM logs"
-    columns:list = [id, level, message, timestamp, module, caller, tf_proto_version, tf_provider_addr, tf_rpc, tf_resource_type, tf_attribute_path, tf_client_capability_write_only_attributes_allowed, tf_client_capability_deferral_allowed, tf_req_duration_ms, diagnostic_error_count, diagnostic_warning_count]
+    sql = "SELECT id, level, message, timestamp, module, caller, tf_proto_version, tf_provider_addr, tf_rpc, tf_resource_type, tf_attribute_path, tf_client_capability_write_only_attributes_allowed, tf_client_capability_deferral_allowed, tf_req_duration_ms, diagnostic_error_count, diagnostic_warning_count, incomplete FROM logs"
+    columns:list = [id, level, message, timestamp, module, caller, tf_proto_version, tf_provider_addr, tf_rpc, tf_resource_type, tf_attribute_path, tf_client_capability_write_only_attributes_allowed, tf_client_capability_deferral_allowed, tf_req_duration_ms, diagnostic_error_count, diagnostic_warning_count, incomplete]
     filters:list[str] = []
     params:list = []
 
@@ -42,15 +45,16 @@ def get_filtered_logs(
     
     if filters:
         sql += " WHERE " + " AND ".join(filters)
-    sql += " ORDER BY timestamp DESC LIMIT ? "
+    sql += " ORDER BY timestamp DESC LIMIT ? OFFSET ? "
     params.append(limit)
+    params.append(-offset)
 
     cursor.execute(sql,params)
     rows = cursor.fetchall()
     conn.close()
 
     return [
-        {"id":r[0], "level":r[1], "message":r[2], "timestamp":r[3], "module":r[4], "caller":r[5], "tf_proto_version":r[6], "tf_provider_addr":r[7], "tf_rpc":r[8], "tf_resource_type":r[9], "tf_attribute_path":r[10], "tf_client_capability_write_only_attributes_allowed":r[11], "tf_client_capability_deferral_allowed":r[12], "tf_req_duration_ms":r[13], "diagnostic_error_count":r[14], "diagnostic_warning_count":r[15]} for r in rows
+        {"id":r[0], "level":r[1], "message":r[2], "timestamp":r[3], "module":r[4], "caller":r[5], "tf_proto_version":r[6], "tf_provider_addr":r[7], "tf_rpc":r[8], "tf_resource_type":r[9], "tf_attribute_path":r[10], "tf_client_capability_write_only_attributes_allowed":r[11], "tf_client_capability_deferral_allowed":r[12], "tf_req_duration_ms":r[13], "diagnostic_error_count":r[14], "diagnostic_warning_count":r[15], "incomplete":r[16]} for r in rows
     ]
 
 db = Db.LogDatabase(DB_PATH)

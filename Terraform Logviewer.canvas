@@ -1,15 +1,16 @@
 {
 	"nodes":[
-		{"id":"c22bb721f172f0ac","type":"text","text":"парсер","x":-160,"y":320,"width":250,"height":60,"color":"2"},
-		{"id":"efaf751982208c40","type":"text","text":"gRPC шина","x":-780,"y":320,"width":250,"height":60,"color":"1"},
-		{"id":"74e075e8ae4a90f9","type":"text","text":"БД для хранения 1 лога","x":300,"y":290,"width":250,"height":60,"color":"4"},
-		{"id":"17d1b14b64a8f16a","x":320,"y":350,"width":600,"height":290,"color":"4","type":"text","text":"- id INTEGER PRIMARY KEY AUTOINCREMENT —  ID, tf_req_id\n- level TEXT — уровень (info, debug, trace, error).\n- message TEXT — текст сообщения.\n- timestamp DATETIME — временная метка\n- module TEXT — модуль (\"provider\", \"sdk.framework\")\n- caller TEXT — путь вызова\n- extra_json TEXT — JSON-строка с остальными полями (tf_rpc и т.д.) для динамических данных"},
-		{"id":"02750ccc8f0be57c","type":"text","text":"UI (frontend)","x":-160,"y":0,"width":250,"height":60,"color":"1"}
+		{"id":"c22bb721f172f0ac","type":"text","text":"парсер","x":-160,"y":320,"width":250,"height":60,"color":"4"},
+		{"id":"02750ccc8f0be57c","type":"text","text":"UI (frontend)","x":-160,"y":0,"width":250,"height":60,"color":"1"},
+		{"id":"74e075e8ae4a90f9","type":"text","text":"БД для хранения 1 лога","x":305,"y":320,"width":250,"height":60,"color":"4"},
+		{"id":"17d1b14b64a8f16a","x":320,"y":420,"width":620,"height":490,"color":"4","type":"text","text":"- id INTEGER PRIMARY KEY AUTOINCREMENT —  ID, tf_req_id\n- level TEXT — уровень (info, debug, trace, error).\n- message TEXT — текст сообщения.\n- timestamp DATETIME — временная метка\n- module TEXT — модуль (\"provider\", \"sdk.framework\")\n- caller TEXT — путь вызова\n- tf_proto_version TEXT - версия протокола gRPC/Terraform\n- tf_provider_addr TEXT - адрес провайдера\n- tf_rpc TEXT - методы RPC\n- tf_resource_type TEXT - имена ресурсов\n- tf_attribute_path TEXT - пути\n- tf_client_capability_write_only_attributes_allowed BOOLEAN\n- tf_client_capability_deferral_allowed BOOLEAN \n- tf_req_duration_ms INTEGER - длительность запроса в мс\n- diagnostic_error_count INTEGER - кол-во ошибок диагностики\n- diagnostic_warning_count INTEGER - кол-во предупреждений диагностики"},
+		{"id":"efaf751982208c40","type":"text","text":"gRPC шина","x":-640,"y":320,"width":250,"height":60,"color":"1"}
 	],
 	"edges":[
-		{"id":"a556cefadbd9e12f","fromNode":"c22bb721f172f0ac","fromSide":"right","toNode":"74e075e8ae4a90f9","toSide":"left","fromEnd":"arrow","color":"3","label":"api"},
-		{"id":"5b98885b88587338","fromNode":"c22bb721f172f0ac","fromSide":"top","toNode":"02750ccc8f0be57c","toSide":"bottom","color":"1","label":"api"},
+		{"id":"a556cefadbd9e12f","fromNode":"c22bb721f172f0ac","fromSide":"right","toNode":"74e075e8ae4a90f9","toSide":"left","fromEnd":"arrow","color":"4","label":"api"},
+		{"id":"5b98885b88587338","fromNode":"c22bb721f172f0ac","fromSide":"top","toNode":"02750ccc8f0be57c","toSide":"bottom","color":"3","label":"api"},
 		{"id":"f54eccafa86fa8c0","fromNode":"c22bb721f172f0ac","fromSide":"left","toNode":"efaf751982208c40","toSide":"right","color":"1","label":"api"},
-		{"id":"ffa66a04b7af9107","fromNode":"c22bb721f172f0ac","fromSide":"bottom","toNode":"17d1b14b64a8f16a","toSide":"left","color":"4"}
+		{"id":"ffa66a04b7af9107","fromNode":"c22bb721f172f0ac","fromSide":"bottom","toNode":"17d1b14b64a8f16a","toSide":"left","color":"4"},
+		{"id":"fae1ba66c592e346","fromNode":"74e075e8ae4a90f9","fromSide":"right","toNode":"17d1b14b64a8f16a","toSide":"top","toEnd":"none","color":"4"}
 	]
 }
