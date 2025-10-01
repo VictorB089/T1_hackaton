@@ -1,8 +1,8 @@
-from T1_hackaton_repo import Db
+import Db
 import json
 
 TESTLOG_PATH = "test_log.json"
-TEST_DB_PATH = "testDB.db"
+TEST_DB_PATH = "output/testDB.db"
 
 db = Db.LogDatabase(TEST_DB_PATH)
 

@@ -1,7 +1,7 @@
 import sqlite3
 from typing import *
 
-DB_FILENAME = "log_last.db"
+DB_FILENAME = "output/log_last.db"
 
 
 class LogDatabase:
